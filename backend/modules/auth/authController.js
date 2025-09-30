@@ -1,4 +1,9 @@
-const { CognitoUser, AuthenticationDetails, CognitoUserAttribute, userPool } = require("../../config/cognito");
+const {
+  CognitoUser,
+  AuthenticationDetails,
+  CognitoUserAttribute,
+  userPool,
+} = require("../../config/cognito");
 
 // Register user
 const register = (req, res) => {
@@ -14,12 +19,15 @@ const register = (req, res) => {
 
   userPool.signUp(studentid, password, attributeList, null, (err, result) => {
     if (err) return res.status(400).json({ error: err.message });
-    res.json({ user: result.user.getUsername(), message: "Check your email for OTP" });
+    res.json({
+      user: result.user.getUsername(),
+      message: "Check your email for OTP",
+    });
   });
 };
 
 // Confirm OTP
-const confirmUser = (req, res) => {
+const confirm = (req, res) => {
   const { studentid, code } = req.body;
   const cognitoUser = new CognitoUser({ Username: studentid, Pool: userPool });
 
@@ -32,13 +40,67 @@ const confirmUser = (req, res) => {
 // Login
 const login = (req, res) => {
   const { studentid, password } = req.body;
-  const authDetails = new AuthenticationDetails({ Username: studentid, Password: password });
+  const authDetails = new AuthenticationDetails({
+    Username: studentid,
+    Password: password,
+  });
   const cognitoUser = new CognitoUser({ Username: studentid, Pool: userPool });
 
   cognitoUser.authenticateUser(authDetails, {
-    onSuccess: (result) => res.json({ message: "Login successful", token: result.getIdToken().getJwtToken() }),
+    onSuccess: (result) =>
+      res.json({
+        message: "Login successful",
+        token: result.getIdToken().getJwtToken(),
+      }),
     onFailure: (err) => res.status(400).json({ error: err.message }),
   });
 };
 
-module.exports = { register, confirmUser, login };
+// Forgot password (step 1: send reset code)
+const forgotPassword = (req, res) => {
+  const { studentid } = req.body;
+
+  const userData = { Username: studentid, Pool: userPool };
+  const cognitoUser = new CognitoUser(userData);
+
+  cognitoUser.forgotPassword({
+    onSuccess: () => {
+      res.json({
+        message:
+          "Password reset initiated. Check your email for the verification code.",
+      });
+    },
+    onFailure: (err) => {
+      res.status(400).json({ error: err.message });
+    },
+  });
+};
+
+// Confirm new password (step 2: reset with code)
+const confirmPassword = (req, res) => {
+  const { studentid, code, newPassword } = req.body;
+
+  const userData = { Username: studentid, Pool: userPool };
+  const cognitoUser = new CognitoUser(userData);
+
+  cognitoUser.confirmPassword(code, newPassword, {
+    onSuccess: () => {
+      res.json({
+        message:
+          "Password reset successful! You can now log in with your new password.",
+      });
+    },
+    onFailure: (err) => {
+      res.status(400).json({ error: err.message });
+    },
+  });
+};
+
+// ✅ Export all controllers
+module.exports = {
+  register,
+  confirm,
+  login,
+  forgotPassword,
+  confirmPassword,
+};

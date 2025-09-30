@@ -1,14 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const { register, confirmUser, login } = require("./authController");
+const {
+  register,
+  confirm,
+  login,
+  forgotPassword,
+  confirmPassword,
+} = require("./authController");
 
 // POST /api/auth/register
 router.post("/register", register);
 
 // POST /api/auth/confirm
-router.post("/confirm", confirmUser);
+router.post("/confirm", confirm);
 
 // POST /api/auth/login
 router.post("/login", login);
 
-module.exports = router; // ✅ Export the router object, not an object wrapper
+// POST /api/auth/forgot-password
+router.post("/forgot-password", forgotPassword);
+
+// POST /api/auth/confirm-password
+router.post("/confirm-password", confirmPassword);
+
+module.exports = router; // ✅ export the router
