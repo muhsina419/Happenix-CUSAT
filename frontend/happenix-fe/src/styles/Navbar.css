@@ -1,0 +1,35 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #0a0035;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff0077, #ff6600, #ff00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  cursor: pointer;
+}
+
+.links a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  color: #ddd;
+  transition: color 0.3s ease;
+}
+
+.links a:hover {
+  color: #ff6600;
+}
+
+.navbar-logo {
+  height: 40px;
+  object-fit: contain;
+  cursor: pointer;
+}
