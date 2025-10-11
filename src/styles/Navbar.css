@@ -1,0 +1,52 @@
+/* General Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem; /* Increased padding */
+  width: 100%;
+  position: absolute; /* Sits on top of the background */
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background-color: transparent; /* Makes it see-through */
+}
+
+.navbar-logo {
+  height: 45px; /* Slightly larger logo */
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 2rem; /* Space between links */
+}
+
+.links a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #ffffff; /* White text */
+  font-size: 1rem;
+  transition: opacity 0.3s ease;
+}
+
+.links a:hover {
+  opacity: 0.8;
+}
+
+/* Specific style for the Sign In button */
+.links .sign-in-btn {
+  background-color: #ffffff;
+  color: #1a202c; /* Dark text */
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+}
+
+.links .sign-in-btn:hover {
+  background-color: #e2e8f0;
+  opacity: 1;
+}

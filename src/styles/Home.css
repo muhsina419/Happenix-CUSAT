@@ -1,0 +1,67 @@
+.home-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Aligns content to the left */
+  position: relative;
+  background-image: url('../assets/concert-bg.jpg'); /* <-- YOUR NEW BG IMAGE */
+  background-size: cover;
+  background-position: center;
+  padding: 0 4rem; /* Adds side padding */
+  color: #ffffff;
+}
+
+/* This creates the dark overlay for better text readability */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative; /* Sits on top of the overlay */
+  z-index: 2;
+  max-width: 650px;
+}
+
+.hero-content h1 {
+  font-size: 3.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+/* Special styling for the last line of the heading */
+.hero-content h1 span {
+  color: #d1d5db; /* A slightly dimmer white */
+  font-weight: 400;
+}
+
+.hero-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 2.5rem;
+  color: #e5e7eb;
+}
+
+.cta-button {
+  background-color: #8B5CF6; /* A nice purple color */
+  color: #ffffff;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+}
+
+.cta-button:hover {
+  background-color: #7C3AED;
+}
