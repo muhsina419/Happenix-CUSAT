@@ -1,9 +1,19 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const routes = require("./routes");
 
 const app = express();
+
+// ✅ Enable CORS for frontend (Vite default: 5173)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(bodyParser.json());
 
 // 🔹 Use modular routes

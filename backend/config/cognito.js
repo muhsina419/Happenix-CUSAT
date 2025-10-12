@@ -1,16 +1,16 @@
-const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
-global.fetch = require("node-fetch"); // Required for Node environment
+require("dotenv").config();
+const {
+  CognitoUserPool,
+  CognitoUser,
+  AuthenticationDetails,
+  CognitoUserAttribute,
+} = require("amazon-cognito-identity-js");
 
 const poolData = {
   UserPoolId: process.env.USER_POOL_ID,
   ClientId: process.env.CLIENT_ID,
 };
 
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+const userPool = new CognitoUserPool(poolData);
 
-module.exports = {
-  CognitoUser: AmazonCognitoIdentity.CognitoUser,
-  AuthenticationDetails: AmazonCognitoIdentity.AuthenticationDetails,
-  CognitoUserAttribute: AmazonCognitoIdentity.CognitoUserAttribute,
-  userPool,
-};
+module.exports = { userPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute };
