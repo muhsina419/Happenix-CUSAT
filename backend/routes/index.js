@@ -1,9 +1,20 @@
 const express = require("express");
 const router = express.Router();
 
-const authRoutes = require("../modules/auth/authRoutes");
+try {
+  const authRoutes = require("../modules/auth/authRoutes");
+  console.log("✅ authRoutes loaded");
+  router.use("/auth", authRoutes);
+} catch (err) {
+  console.error("❌ Error loading authRoutes:", err);
+}
 
-// Mount auth routes
-router.use("/auth", authRoutes);
+try {
+  const userRoutes = require("../modules/users/userRoutes");
+  console.log("✅ userRoutes loaded");
+  router.use("/users", userRoutes);
+} catch (err) {
+  console.error("❌ Error loading userRoutes:", err);
+}
 
 module.exports = router;
