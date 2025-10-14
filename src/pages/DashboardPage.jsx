@@ -1,6 +1,6 @@
 function DashboardPage({ setPage }) {
     return (
-        <div className="text-center">
+        <div className="text-center body">
             <h1 className="text-4xl font-bold text-green-600 mb-4">Login Successful!</h1>
             <p className="text-lg text-gray-700">Welcome to your dashboard.</p>
             <button

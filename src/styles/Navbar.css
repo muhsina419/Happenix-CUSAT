@@ -13,7 +13,7 @@
 }
 
 .navbar-logo {
-  height: 45px; /* Slightly larger logo */
+  height: 80px; /* Slightly larger logo */
   object-fit: contain;
   cursor: pointer;
 }

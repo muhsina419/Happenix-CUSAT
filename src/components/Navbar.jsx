@@ -1,6 +1,6 @@
 import { Link , useLocation } from "react-router-dom";
 import "../styles/Navbar.css";
-import logo from "../assets/logo-h.png"; // <-- Use the new 'H' logo
+import logo from "../assets/logoX.png"; // <-- Use the new 'H' logo
 
 function Navbar() {
 

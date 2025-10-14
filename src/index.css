@@ -5,8 +5,13 @@
   box-sizing: border-box;
 }
 
-body {
+/* body {
   font-family: system-ui, sans-serif;
   background: #f4f7fb;
   color: #333;
+} */
+
+body {
+  background: #01010a;
+  background: linear-gradient(162deg, rgba(1, 1, 10, 1) 0%, rgba(9, 2, 92, 1) 53%, rgba(196, 106, 106, 1) 100%);
 }
