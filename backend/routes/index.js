@@ -23,5 +23,16 @@ if (!userRoutes) {
   router.use("/users", userRoutes);
 }
 
+// =======================
+// Event Routes
+// =======================
+const eventRoutes = require("../modules/events/eventRoutes");
+if (!eventRoutes) {
+  console.error("❌ Failed to load eventRoutes");
+} else {
+  console.log("✅ eventRoutes loaded");
+  router.use("/events", eventRoutes);
+}
+
 
 module.exports = router;
