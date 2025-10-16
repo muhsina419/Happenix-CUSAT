@@ -1,0 +1,30 @@
+.dashboard-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    background-image: url('../assets/concert-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  
+  .dashboard-layout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(36, 34, 74, 0.85);
+    z-index: 1;
+  }
+  
+  .dashboard-layout > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .layout-content {
+    flex-grow: 1;
+  }

@@ -3,16 +3,15 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Aligns content to the left */
+  justify-content: flex-start;
   position: relative;
-  background-image: url('../assets/concert-bg.jpg'); /* <-- YOUR NEW BG IMAGE */
+  background-image: url('../assets/concert-bg.jpg');
   background-size: cover;
   background-position: center;
-  padding: 0 4rem; /* Adds side padding */
+  padding: 0 4rem;
   color: #ffffff;
 }
 
-/* This creates the dark overlay for better text readability */
 .hero-overlay {
   position: absolute;
   top: 0;
@@ -24,7 +23,7 @@
 }
 
 .hero-content {
-  position: relative; /* Sits on top of the overlay */
+  position: relative;
   z-index: 2;
   max-width: 650px;
 }
@@ -36,9 +35,8 @@
   margin-bottom: 1.5rem;
 }
 
-/* Special styling for the last line of the heading */
 .hero-content h1 span {
-  color: #d1d5db; /* A slightly dimmer white */
+  color: #d1d5db;
   font-weight: 400;
 }
 
@@ -51,7 +49,7 @@
 }
 
 .cta-button {
-  background-color: #8B5CF6; /* A nice purple color */
+  background-color: #8B5CF6;
   color: #ffffff;
   padding: 1rem 2.5rem;
   border-radius: 50px;

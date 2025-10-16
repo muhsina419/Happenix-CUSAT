@@ -1,10 +1,9 @@
-import { Link , useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../styles/Navbar.css";
-import logo from "../assets/logoX.png"; // <-- Use the new 'H' logo
+import logo from "../assets/logo-h.png";
 
 function Navbar() {
-
-  const location = useLocation(); // 2. Get the current location object
+  const location = useLocation();
 
   return (
     <nav className="navbar">
@@ -13,7 +12,6 @@ function Navbar() {
       </Link>
 
       <div className="links">
-        {/* 3. Only show this link if we are NOT on the /events page */}
         {location.pathname !== "/events" && (
           <Link to="/events">Explore Events</Link>
         )}

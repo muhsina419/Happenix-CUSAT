@@ -1,13 +1,20 @@
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { authAPI } from '../api/auth';
+import logo from '../assets/logo-h.png';
+import '../styles/AuthForm.css';
 
-function ConfirmPasswordPage({ setPage, sharedState }) {
+function ConfirmPasswordPage() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const email = location.state?.email || '';
     const [formData, setFormData] = useState({
-        studentid: sharedState.studentid || '',
         code: '',
-        newPassword: ''
+        newPassword: '',
+        confirmPassword: ''
     });
-     const [isLoading, setIsLoading] = useState(false);
-     const [notification, setNotification] = useState({ message: '', type: '' });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -16,59 +23,76 @@ function ConfirmPasswordPage({ setPage, sharedState }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+
+        if (formData.newPassword !== formData.confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
         setIsLoading(true);
-        setNotification({ message: '', type: '' });
-
-        const result = await authAPI.confirmPassword(formData);
-
+        const result = await authAPI.confirmPassword({ email, code: formData.code, newPassword: formData.newPassword });
         setIsLoading(false);
         if (result.success) {
-            setNotification({ message: 'Password has been reset! Redirecting to login...', type: 'success' });
-            setTimeout(() => setPage('login'), 2000);
+            alert("Password has been reset successfully!");
+            navigate('/login');
         } else {
-            setNotification({ message: result.error, type: 'error' });
+            setError(result.error || 'Password reset failed');
         }
     };
 
     return (
-        <div className="w-full max-w-sm">
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Confirm New Password</h2>
-            <p className="text-center text-gray-600 mb-4">Enter the code from your email and your new password.</p>
-             <Notification message={notification.message} type={notification.type} onDismiss={() => setNotification({ message: '', type: '' })} />
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    type="text"
-                    name="studentid"
-                    value={formData.studentid}
-                    onChange={handleChange}
-                    placeholder="Student ID"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                    type="text"
-                    name="code"
-                    value={formData.code}
-                    onChange={handleChange}
-                    placeholder="Reset Code"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                 <input
-                    type="password"
-                    name="newPassword"
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                    placeholder="New Password"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button type="submit" disabled={isLoading} className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center disabled:bg-blue-400">
-                    {isLoading ? <Spinner /> : 'Set New Password'}
-                </button>
-            </form>
+        <div className="auth-page">
+            <div className="auth-form-container">
+                <img src={logo} alt="Happenix Logo" className="auth-logo" />
+                <h2 style={{ textTransform: 'lowercase', fontSize: '2.2rem' }}>confirm password</h2>
+                {email && <p style={{ marginTop: '0.25rem' }}>Code sent to: {email}</p>}
+                
+                {error && <p style={{ color: '#F56565', marginTop: '1.5rem', marginBottom: 0 }}>{error}</p>}
+
+                <form onSubmit={handleSubmit} className="auth-form" style={{ marginTop: '2.5rem' }}>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            name="code"
+                            value={formData.code}
+                            onChange={handleChange}
+                            placeholder="Enter the code from your E-mail"
+                            required
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            name="newPassword"
+                            value={formData.newPassword}
+                            onChange={handleChange}
+                            placeholder="enter password"
+                            required
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            placeholder="confirm password"
+                            required
+                        />
+                    </div>
+                    
+                    <button type="submit" className="auth-button" disabled={isLoading}>
+                        {isLoading ? 'Resetting...' : 'Reset Password'}
+                    </button>
+                </form>
+
+                <p className="auth-switch-link">
+                    <Link to="/login">Back to login</Link>
+                </p>
+            </div>
         </div>
     );
 }
 
-export default ConfirmPasswordPage
+export default ConfirmPasswordPage;

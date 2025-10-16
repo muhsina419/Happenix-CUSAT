@@ -1,55 +1,57 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from '../api/auth';
+import logo from '../assets/logo-h.png';
+import '../styles/AuthForm.css';
 
-
-function ForgotPasswordPage({ setPage, setSharedState }) {
-    const [studentid, setStudentId] = useState('');
+function ForgotPasswordPage() {
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [notification, setNotification] = useState({ message: '', type: '' });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setNotification({ message: '', type: '' });
-
-        const result = await authAPI.forgotPassword({ studentid });
-
+        const result = await authAPI.forgotPassword({ email });
         setIsLoading(false);
         if (result.success) {
-            setNotification({ message: result.data.message, type: 'success' });
-            setSharedState({ studentid: studentid });
-            setTimeout(() => setPage('confirmPassword'), 2000);
+            navigate('/confirm-password', { state: { email } });
         } else {
-            setNotification({ message: result.error, type: 'error' });
+            alert(result.error || 'Failed to send reset code');
         }
     };
 
     return (
-        <div className="w-full max-w-sm">
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Reset Password</h2>
-            <p className="text-center text-gray-600 mb-4">Enter your Student ID to receive a reset code.</p>
-            <Notification message={notification.message} type={notification.type} onDismiss={() => setNotification({ message: '', type: '' })} />
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    type="text"
-                    name="studentid"
-                    value={studentid}
-                    onChange={(e) => setStudentId(e.target.value)}
-                    placeholder="Student ID"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button type="submit" disabled={isLoading} className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center disabled:bg-blue-400">
-                    {isLoading ? <Spinner /> : 'Send Reset Code'}
-                </button>
-            </form>
-             <p className="text-center text-sm text-gray-600 mt-4">
-                Remember your password?{' '}
-                <button onClick={() => setPage('login')} className="font-medium text-blue-600 hover:underline">
-                    Log In
-                </button>
-            </p>
+        <div className="auth-page">
+            <div className="auth-form-container">
+                <img src={logo} alt="Happenix Logo" className="auth-logo" />
+                <h2 style={{ textTransform: 'lowercase', fontSize: '2.2rem' }}>forgot password</h2>
+                
+                <form onSubmit={handleSubmit} className="auth-form" style={{ marginTop: '2.5rem' }}>
+                    <div className="input-group">
+                        <label htmlFor="email">Mail Address</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@cusat.ac.in"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="auth-button" disabled={isLoading}>
+                        {isLoading ? 'Sending...' : 'Send reset code'}
+                    </button>
+                </form>
+
+                <p className="auth-switch-link">
+                    <Link to="/login">Back to login</Link>
+                </p>
+            </div>
         </div>
     );
 }
 
-export default ForgotPasswordPage
+export default ForgotPasswordPage;

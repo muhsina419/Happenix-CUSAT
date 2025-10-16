@@ -1,106 +1,76 @@
 .events-page {
-    min-height: 100vh;
-    width: 100%;
-    position: relative;
-    background-image: url('../assets/concert-bg.jpg'); /* Reuses the same background */
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed; /* Keeps the background stationary on scroll */
-    padding: 8rem 4rem 4rem; /* Top padding to push content below the navbar */
-    color: #ffffff;
-  }
-  
-  /* Dark overlay for readability */
-  .events-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 1;
-  }
-  
-  .events-content-wrapper {
-    position: relative;
-    z-index: 2;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .events-page-title {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 3rem;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 1rem;
-  }
-  
-  .events-layout {
-    display: flex;
-    gap: 3rem;
-  }
-  
-  /* Left Column: Event List */
-  .events-list {
-    flex: 3; /* Takes up 3/4 of the space */
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .event-item {
-    background-color: rgba(26, 32, 44, 0.7); /* Semi-transparent dark background */
-    border-radius: 15px;
-    padding: 1.5rem 2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    backdrop-filter: blur(8px); /* Frosted glass effect */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .event-item:hover {
-    background-color: rgba(45, 55, 72, 0.8);
-  }
-  
-  .event-summary {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  
-  .event-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out, margin-top 0.5s ease-out;
-  }
-  
-  .event-details.active {
-    max-height: 200px; /* Adjust as needed for content */
-    margin-top: 1.5rem;
-  }
-  
-  .event-details p {
-    color: #CBD5E0;
-    line-height: 1.6;
-  }
-  
-  /* Right Column: Filter Section */
-  .filter-section {
-    flex: 1; /* Takes up 1/4 of the space */
-  }
-  
-  .filter-dropdown {
-    background-color: #8B5CF6; /* Purple color from home button */
-    color: #ffffff;
-    border: none;
-    width: 100%;
-    padding: 1rem 1.5rem;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  background-image: url('../assets/concert-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 8rem 4rem 4rem;
+  color: #ffffff;
+}
+
+.events-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+.events-content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.events-page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 1rem;
+}
+
+.calendar-container {
+  background-color: rgba(26, 32, 44, 0.7);
+  border-radius: 15px;
+  padding: 1.5rem;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fc {
+  color: white;
+}
+
+.fc .fc-button-primary {
+  background-color: #8B5CF6;
+  border-color: #8B5CF6;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #7C3AED;
+  border-color: #7C3AED;
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: #E2E8F0;
+  text-decoration: none;
+}
+
+.fc .fc-daygrid-day-number {
+  color: #CBD5E0;
+  text-decoration: none;
+}
+
+.fc .fc-day-today {
+  background-color: rgba(74, 85, 104, 0.4);
+}
+
+.fc-event-main {
+  color: white !important;
+}

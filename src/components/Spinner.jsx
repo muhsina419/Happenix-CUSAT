@@ -1,8 +1,8 @@
 import React from 'react';
-import './Spinner.css'; // Import the CSS we just created
+import './Spinner.css';
 
 function Spinner() {
   return <div className="spinner"></div>;
 }
 
-export default Spinner; // <-- This is the crucial line that fixes the error
+export default Spinner;

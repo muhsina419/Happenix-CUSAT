@@ -4,143 +4,158 @@ const {
   CognitoUserAttribute,
   userPool,
 } = require("../../config/cognito");
+const { createUser, updateUserVerified } = require("../users/userModels");
 
 // ===============================
 // REGISTER USER
 // ===============================
-const register = (req, res) => {
-  const { fullname, studentid, department, course, email, password, interests } = req.body;
 
-  if (!fullname || !studentid || !email || !password) {
+const register = async (req, res) => {
+  const { fullname, email, password, confirmPassword, department } = req.body;
+
+  if (!fullname || !email || !password || !confirmPassword || !department) {
     return res.status(400).json({ error: "Please fill all required fields." });
   }
+
+  // ✅ Validate passwords match
+  if (password !== confirmPassword) {
+    return res.status(400).json({ error: "Passwords do not match." });
+  }
+  
 
   const attributeList = [
     new CognitoUserAttribute({ Name: "name", Value: fullname }),
     new CognitoUserAttribute({ Name: "email", Value: email }),
-    new CognitoUserAttribute({ Name: "custom:department", Value: department || "" }),
-    new CognitoUserAttribute({ Name: "custom:course", Value: course || "" }),
-    new CognitoUserAttribute({ Name: "custom:interests", Value: interests || "" }),
+    new CognitoUserAttribute({ Name: "custom:department", Value: department }),
   ];
 
-  userPool.signUp(studentid, password, attributeList, null, (err, result) => {
+  userPool.signUp(email, password, attributeList, null, async (err, result) => {
     if (err) return res.status(400).json({ error: err.message });
+
+    try {
+      // Save user details to DynamoDB
+      const userData = {
+        email,
+        fullname,
+        department,
+        verified: false,
+        createdAt: new Date().toISOString(),
+      };
+      await createUser(userData);
+      console.log("✅ User saved to DynamoDB:", email);
+    } catch (dbErr) {
+      console.error("❌ DynamoDB save error:", dbErr);
+    }
+
     res.json({
       user: result.user.getUsername(),
-      message: "Registration successful! Check your email for OTP.",
+      message: "Registration successful! Please check your email for OTP.",
     });
   });
 };
 
 // ===============================
-// CONFIRM REGISTRATION
+// CONFIRM REGISTRATION (OTP)
 // ===============================
-const confirm = (req, res) => {
-  const { studentid, code } = req.body;
+const confirm = async (req, res) => {
+  const { email, code } = req.body;
 
-  if (!studentid || !code)
-    return res.status(400).json({ error: "Student ID and code are required." });
+  if (!email || !code) {
+    return res.status(400).json({ error: "Email and verification code are required." });
+  }
 
-  const cognitoUser = new CognitoUser({ Username: studentid, Pool: userPool });
+  const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
 
-  cognitoUser.confirmRegistration(code, true, (err, result) => {
+  cognitoUser.confirmRegistration(code, true, async (err, result) => {
     if (err) return res.status(400).json({ error: err.message });
+
+    try {
+      await updateUserVerified(email);
+      console.log("✅ User verified flag updated:", email);
+    } catch (dbErr) {
+      console.error("❌ DynamoDB update error:", dbErr);
+    }
+
     res.json({ message: "User confirmed successfully!", result });
   });
 };
 
 // ===============================
-// LOGIN (Email or StudentID)
+// LOGIN
 // ===============================
 const login = (req, res) => {
-  const { studentid, email, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!password || (!studentid && !email)) {
-    return res
-      .status(400)
-      .json({ success: false, error: "Please provide email or student ID and password." });
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required." });
   }
 
-  const username = studentid || email;
-
-  console.log(`🔹 Login attempt with ${email ? "email" : "studentid"}: ${username}`);
-
   const authDetails = new AuthenticationDetails({
-    Username: username,
+    Username: email,
     Password: password,
   });
 
-  const cognitoUser = new CognitoUser({ Username: username, Pool: userPool });
+  const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
 
   cognitoUser.authenticateUser(authDetails, {
-    onSuccess: (result) =>
-      res.json({
-        success: true,
+    onSuccess: (result) => {
+      return res.json({
         message: "Login successful",
-        data: {
-          token: result.getIdToken().getJwtToken(),
-        },
-      }),
+        token: result.getIdToken().getJwtToken(),
+      });
+    },
     onFailure: (err) => {
-      console.error("❌ Login failed:", err);
-      res.status(400).json({ success: false, error: err.message });
+      // Provide clearer error information for the frontend to handle
+      const code = err?.code || "AuthError";
+      const message = err?.message || "Authentication failed";
+      const status = code === "UserNotConfirmedException" ? 403 : 400;
+      return res.status(status).json({ error: message, errorCode: code });
+    },
+    mfaRequired: (challengeName, challengeParameters) => {
+      // Not used currently, but returning a clear response in case MFA is enabled later
+      return res.status(401).json({ error: "MFA required", errorCode: "MFARequired" });
+    },
+    newPasswordRequired: () => {
+      return res.status(403).json({ error: "New password required", errorCode: "NewPasswordRequired" });
     },
   });
 };
 
-
 // ===============================
-// FORGOT PASSWORD (Step 1)
+// FORGOT PASSWORD
 // ===============================
 const forgotPassword = (req, res) => {
-  const { studentid, email } = req.body;
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: "Email is required." });
 
-  if (!studentid && !email)
-    return res.status(400).json({ error: "Provide email or student ID." });
-
-  const username = studentid || email;
-  const cognitoUser = new CognitoUser({ Username: username, Pool: userPool });
+  const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
 
   cognitoUser.forgotPassword({
-    onSuccess: () => {
-      res.json({
-        message:
-          "Password reset initiated. Check your email for the verification code.",
-      });
-    },
-    onFailure: (err) => {
-      res.status(400).json({ error: err.message });
-    },
+    onSuccess: () =>
+      res.json({ message: "Password reset code sent to your registered email." }),
+    onFailure: (err) => res.status(400).json({ error: err.message }),
   });
 };
 
 // ===============================
-// CONFIRM NEW PASSWORD (Step 2)
+// CONFIRM NEW PASSWORD
 // ===============================
 const confirmPassword = (req, res) => {
-  const { studentid, email, code, newPassword } = req.body;
+  const { email, code, newPassword } = req.body;
 
-  if (!code || !newPassword || (!studentid && !email))
-    return res.status(400).json({ error: "Missing required fields." });
+  if (!email || !code || !newPassword) {
+    return res.status(400).json({ error: "Email, code, and new password are required." });
+  }
 
-  const username = studentid || email;
-  const cognitoUser = new CognitoUser({ Username: username, Pool: userPool });
+  const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
 
   cognitoUser.confirmPassword(code, newPassword, {
-    onSuccess: () => {
-      res.json({
-        message: "Password reset successful! You can now log in with your new password.",
-      });
-    },
-    onFailure: (err) => {
-      res.status(400).json({ error: err.message });
-    },
+    onSuccess: () =>
+      res.json({ message: "Password reset successful! You can now log in with your new password." }),
+    onFailure: (err) => res.status(400).json({ error: err.message }),
   });
 };
 
-// ===============================
-// EXPORT ALL CONTROLLERS
-// ===============================
 module.exports = {
   register,
   confirm,

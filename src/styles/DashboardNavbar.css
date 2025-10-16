@@ -1,0 +1,75 @@
+.dashboard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+    width: 100%;
+    background-color: #24224A;
+    border-bottom: 1px solid #3C3A6E;
+  }
+  
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .nav-logo { height: 40px; }
+  .nav-link {
+    color: #A0AEC0;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  .nav-link:hover, .nav-link.active { color: #FFFFFF; }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.6rem 1rem;
+    border-radius: 25px;
+    width: 350px;
+  }
+  .search-icon { color: #A0AEC0; }
+  .search-bar input {
+    background: none;
+    border: none;
+    outline: none;
+    color: white;
+    width: 100%;
+  }
+  .search-bar input::placeholder { color: #A0AEC0; }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .icon-button {
+    background: none;
+    border: none;
+    color: #A0AEC0;
+    cursor: pointer;
+    position: relative;
+  }
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #EF4444;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

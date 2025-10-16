@@ -1,41 +1,46 @@
-// The only change is adding 'useLocation' to this import line
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Layouts
+import DashboardLayout from "./layouts/DashboardLayout.jsx";
+import Navbar from "./components/Navbar"; // The public navbar
+
+// Public Pages
 import Home from "./pages/Home";
-import About from "./pages/About";
 import Events from "./pages/Events";
-import DashboardPage from "./pages/DashboardPage";
-import Navbar from "./components/Navbar";
+
+// Auth Pages
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ConfirmPasswordPage from "./pages/ConfirmPasswordPage";
+import ConfirmAccountPage from "./pages/ConfirmAccountPage.jsx";
 
-// A new component to handle the layout logic
-function AppLayout() {
-  // Now this line will work because useLocation is imported
-  const location = useLocation(); 
-  const hideNavbarOn = ['/login', '/register']; 
-  const shouldHideNavbar = hideNavbarOn.includes(location.pathname);
-
-  return (
-    <>
-      {!shouldHideNavbar && <Navbar />}
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Routes>
-      </main>
-    </>
-  );
-}
+// Dashboard Pages
+import DashboardPage from "./pages/DashboardPage";
+import CreateEventPage from './pages/CreateEventPage.jsx';
 
 function App() {
   return (
     <Router>
-      <AppLayout />
+      <Routes>
+        {/* --- Public Routes (Have the public Navbar) --- */}
+        <Route path="/" element={<><Navbar /><Home /></>} />
+        <Route path="/events" element={<><Navbar /><Events /></>} />
+
+        {/* --- Auth Routes (Have no Navbar) --- */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/confirm-password" element={<ConfirmPasswordPage />} />
+        <Route path="/confirm-account" element={<ConfirmAccountPage />} />
+
+        {/* --- Protected Routes (Wrapped by DashboardLayout) --- */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/calendar" element={<Events />} />
+          <Route path="/create-event" element={<CreateEventPage />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }

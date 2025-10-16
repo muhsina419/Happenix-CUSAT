@@ -1,0 +1,58 @@
+.dashboard-page {
+    background-color: #24224A;
+    min-height: 100vh;
+    color: white;
+  }
+  
+  .dashboard-content {
+    padding: 1rem 3rem;
+  }
+  
+  .create-event-section {
+    text-align: center;
+    margin: 2rem 0;
+  }
+  
+  .create-event-btn {
+    background-color: #3C3A6E;
+    border: 1px solid #5A588A;
+    color: white;
+    padding: 0.8rem 2.5rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .recommendations-section {
+    background-color: #2F2D5E;
+    padding: 2rem;
+    border-radius: 20px;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .section-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .section-header a {
+    color: #A0AEC0;
+    text-decoration: none;
+  }
+  
+  .events-carousel {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+  
+  .events-carousel::-webkit-scrollbar {
+    display: none;
+  }

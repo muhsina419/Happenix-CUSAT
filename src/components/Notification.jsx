@@ -1,7 +1,5 @@
-// In a real file, you would import React.
 import React from 'react';
 
-// export const Notification = ({...}) => { ... };
 const Notification = ({ message, type, onDismiss }) => {
     if (!message) return null;
 

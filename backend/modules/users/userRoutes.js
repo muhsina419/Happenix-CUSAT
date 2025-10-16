@@ -3,7 +3,8 @@ const router = express.Router();
 const userController = require("./userController");
 
 // Example endpoints
-router.get("/", userController.getAllUsers);
+
+router.get("/", userController.getUsers);
 router.get("/:id", userController.getUserById);
 
 module.exports = router; // ✅ make sure you're exporting just the router

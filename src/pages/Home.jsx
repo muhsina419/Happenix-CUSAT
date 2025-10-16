@@ -4,7 +4,7 @@ import "../styles/Home.css";
 function Home() {
   return (
     <div className="home-container">
-      <div className="hero-overlay"></div> {/* This darkens the background image */}
+      <div className="hero-overlay"></div>
       
       <div className="hero-content">
         <h1>
