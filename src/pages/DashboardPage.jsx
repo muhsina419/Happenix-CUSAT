@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom'; // 1. Import useOutletContext
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import EventCard from '../components/EventCard';
 import EventDetailModal from '../components/EventDetailModal';
 import UpcomingEventItem from '../components/UpcomingEventItem';
 import '../styles/Dashboard.css';
 
-// ... (your mock data imports)
+// Your mock data imports
 import echoImg from '../assets/echo2025.png';
 import techImg from '../assets/tech_confrence.png';
 import sargamImg from '../assets/sargam.png';
@@ -31,21 +31,30 @@ const upcomingEventsData = [
 
 function DashboardPage() {
   const navigate = useNavigate();
-  const { searchTerm } = useOutletContext(); // 2. Get the searchTerm from the layout
+  const { searchTerm } = useOutletContext();
   const [selectedEvent, setSelectedEvent] = useState(null);
   const scrollContainerRef = useRef(null);
   const [expandedEventId, setExpandedEventId] = useState(null);
 
-  const handleScroll = () => { /* ... (this function is unchanged) ... */ };
-  const handleToggleEvent = (eventId) => { /* ... (this function is unchanged) ... */ };
+  // --- THIS FUNCTION WAS MISSING ---
+  // This is the handler for the "View all" scroll button
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
 
-  // 3. Filter the lists based on the searchTerm
+  // --- THIS FUNCTION WAS MISSING ---
+  // This is the handler for the upcoming event tabs
+  const handleToggleEvent = (eventId) => {
+    setExpandedEventId(prevId => (prevId === eventId ? null : eventId));
+  };
+
+  // Filter the lists based on the searchTerm
   const lowerSearchTerm = searchTerm.toLowerCase();
-
   const filteredRecommended = recommendedEvents.filter(event => 
     event.title.toLowerCase().includes(lowerSearchTerm)
   );
-
   const filteredUpcoming = upcomingEventsData.filter(event => 
     event.title.toLowerCase().includes(lowerSearchTerm)
   );
@@ -54,26 +63,31 @@ function DashboardPage() {
     <>
       <div className="dashboard-content">
         <div className="create-event-section">
-        <button 
-    className="create-event-btn" 
-    onClick={() => navigate('/create-event')}
-  >
-    Create Your Own Event
-  </button>
+          <button 
+            className="create-event-btn" 
+            onClick={() => navigate('/create-event')}
+          >
+            Create Your Own Event
+          </button>
         </div>
 
         <section className="recommendations-section">
           <div className="section-header">
             <h2>Personalized Recommendations</h2>
+            {/* This button now correctly calls handleScroll */}
             <button className="scroll-button" onClick={handleScroll}>
               View all &rarr;
             </button>
           </div>
-          {/* 4. Use the filtered list to render the carousel */}
           <div className="events-carousel" ref={scrollContainerRef}>
             {filteredRecommended.length > 0 ? (
               filteredRecommended.map(event => (
-                <EventCard key={event.id} title={event.title} image={event.image} onClick={() => setSelectedEvent(event)} />
+                <EventCard 
+                  key={event.id} 
+                  title={event.title} 
+                  image={event.image} 
+                  onClick={() => setSelectedEvent(event)}
+                />
               ))
             ) : (
               <p className="no-results-text">No recommendations match your search.</p>
@@ -85,7 +99,6 @@ function DashboardPage() {
           <div className="section-header">
             <h2>Upcoming Events</h2>
           </div>
-          {/* 5. Use the filtered list to render the accordion */}
           <div className="upcoming-events-list">
             {filteredUpcoming.length > 0 ? (
               filteredUpcoming.map(event => (
@@ -93,6 +106,7 @@ function DashboardPage() {
                   key={event.id}
                   event={event}
                   isExpanded={expandedEventId === event.id}
+                  // This item now correctly calls handleToggleEvent
                   onClick={() => handleToggleEvent(event.id)}
                 />
               ))
