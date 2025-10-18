@@ -41,9 +41,22 @@
     font-size: 1.5rem;
   }
   
-  .section-header a {
+  .scroll-button {
     color: #A0AEC0;
     text-decoration: none;
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .scroll-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
   }
   
   .events-carousel {
@@ -55,4 +68,19 @@
   
   .events-carousel::-webkit-scrollbar {
     display: none;
+  }
+
+  .upcoming-events-section {
+    margin-top: 3rem;
+  }
+  
+  .upcoming-events-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .no-results-text {
+    color: #A0AEC0;
+    padding-left: 1rem;
+    font-style: italic;
   }

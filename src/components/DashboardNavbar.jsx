@@ -5,7 +5,8 @@ import profilePic from '../assets/logo.png';
 import '../styles/DashboardNavbar.css';
 import { FaSearch, FaRegCommentDots } from 'react-icons/fa';
 
-function DashboardNavbar() {
+// 1. Accept the new props: searchTerm and setSearchTerm
+function DashboardNavbar({ onProfileClick, searchTerm, setSearchTerm }) {
   return (
     <nav className="dashboard-nav">
       <div className="nav-left">
@@ -16,15 +17,22 @@ function DashboardNavbar() {
       <div className="nav-center">
         <div className="search-bar">
           <FaSearch className="search-icon" />
-          <input type="text" placeholder="Search..." />
+          {/* 2. Make the input controlled */}
+          <input 
+            type="text" 
+            placeholder="Search..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
+      
       <div className="nav-right">
-        <NavLink to="/events" className="nav-link events-link">Events</NavLink>
+        {/* ... (rest of the right side is unchanged) ... */}
         <button className="icon-button">
           <FaRegCommentDots size={22} />
         </button>
-        <button className="icon-button profile-button">
+        <button className="icon-button profile-button" onClick={onProfileClick}>
           <img src={profilePic} alt="Profile" className="profile-pic" />
           <span className="notification-badge">2</span>
         </button>
