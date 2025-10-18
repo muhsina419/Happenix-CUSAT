@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/logo-h.png';
-import profilePic from '../assets/logo.png';
+import profilePic from '../assets/profilepic.png';
 import '../styles/DashboardNavbar.css';
 import { FaSearch, FaRegCommentDots } from 'react-icons/fa';
 
