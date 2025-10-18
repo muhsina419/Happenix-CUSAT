@@ -1,0 +1,94 @@
+.event-item-container {
+    background-color: #3C3A6E;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    border: 1px solid #5A588A;
+    overflow: hidden; /* Important for smooth animation */
+  }
+  
+  .event-item-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+  }
+  
+  .event-item-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .event-item-header h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    flex-grow: 1; /* Pushes the icon to the end */
+  }
+  
+  .expand-icon {
+    font-size: 1.2rem;
+    color: #A0AEC0;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+  }
+  
+  .expand-icon.expanded {
+    transform: rotate(90deg);
+  }
+  
+  .event-item-details {
+    max-height: 0; /* The element is closed by default */
+    overflow: hidden; /* Hides the content */
+    
+    /* These will be animated */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top: 1px solid transparent; /* Hide the border */
+  
+    /* This is the animation! */
+    transition: max-height 0.4s ease-out, padding-top 0.4s ease-out, padding-bottom 0.4s ease-out, border-color 0.4s ease-out;
+  }
+  
+  /* 3. Add this new rule for the 'expanded' state */
+  .event-item-details.expanded {
+    max-height: 200px; /* Set this high enough to fit your content */
+    padding-top: 0; /* The <p> tag inside already has margin */
+    padding-bottom: 1.5rem;
+    border-top: 1px solid #5A588A; /* Show the border */
+  }
+  
+  .event-item-details p {
+    color: #CBD5E0;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .details-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .details-footer span {
+    font-weight: 500;
+    color: #A0AEC0;
+  }
+  
+  .book-now-btn {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
