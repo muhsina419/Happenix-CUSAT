@@ -54,7 +54,12 @@ function DashboardPage() {
     <>
       <div className="dashboard-content">
         <div className="create-event-section">
-          {/* ... (button is unchanged) ... */}
+        <button 
+    className="create-event-btn" 
+    onClick={() => navigate('/create-event')}
+  >
+    Create Your Own Event
+  </button>
         </div>
 
         <section className="recommendations-section">
