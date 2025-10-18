@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:3000/api/auth'; // match your backend port
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/auth';
 
 export const authAPI = {
   login: async ({ email, password }) => {
@@ -15,7 +15,7 @@ export const authAPI = {
           status: response?.status,
         };
       }
-      return { success: true, data: { token }, status: response?.status };
+      return { success: true, data: { token, user: response.data.user }, status: response?.status };
     } catch (err) {
       return { 
         success: false, 

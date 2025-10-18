@@ -7,7 +7,12 @@ function UpcomingEventItem({ event, isExpanded, onClick }) {
     <div className="event-item-container">
       <div className="event-item-header" onClick={onClick}>
         <img src={event.image || eventPlaceholder} alt={event.title} />
-        <h4>{event.title}</h4>
+        <div className="event-title-container">
+          <h4>{event.title}</h4>
+          {event.isUserCreated && (
+            <span className="user-created-badge">Your Event</span>
+          )}
+        </div>
         <span className={`expand-icon ${isExpanded ? 'expanded' : ''}`}>&#x25B8;</span>
       </div>
       

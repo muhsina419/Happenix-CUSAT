@@ -3,10 +3,11 @@
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
-const { PutCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { PutCommand, UpdateCommand, GetCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const ddbDocClient = require("../../config/dynamo");
 
 const TABLE_NAME = process.env.DYNAMO_TABLE || "HappenixUsers";
+const EVENTS_TABLE = process.env.DYNAMO_EVENTS_TABLE || "HappenixEvents";
 
 const createUser = async (userData) => {
   await ddbDocClient.send(
@@ -30,7 +31,33 @@ const updateUserVerified = async (email) => {
   );
 };
 
+const getUserByEmail = async (email) => {
+  const result = await ddbDocClient.send(
+    new GetCommand({
+      TableName: TABLE_NAME,
+      Key: { email },
+    })
+  );
+  return result.Item;
+};
+
+const getUserCreatedEvents = async (email) => {
+  const result = await ddbDocClient.send(
+    new QueryCommand({
+      TableName: EVENTS_TABLE,
+      IndexName: "organizerEmail-index", // Assuming you have a GSI on organizerEmail
+      KeyConditionExpression: "organizerEmail = :email",
+      ExpressionAttributeValues: {
+        ":email": email,
+      },
+    })
+  );
+  return result.Items || [];
+};
+
 module.exports = {
   createUser,
   updateUserVerified,
+  getUserByEmail,
+  getUserCreatedEvents,
 };

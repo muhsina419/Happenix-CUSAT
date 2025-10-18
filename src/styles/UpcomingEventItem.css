@@ -21,10 +21,27 @@
     object-fit: cover;
   }
   
+  .event-title-container {
+    flex-grow: 1; /* Pushes the icon to the end */
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
   .event-item-header h4 {
     font-size: 1.1rem;
     font-weight: 600;
-    flex-grow: 1; /* Pushes the icon to the end */
+    margin: 0;
+  }
+
+  .user-created-badge {
+    background-color: #10B981;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    align-self: flex-start;
   }
   
   .expand-icon {

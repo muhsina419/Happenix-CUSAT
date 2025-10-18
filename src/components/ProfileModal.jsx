@@ -7,6 +7,9 @@ import profileAvatar from '../assets/logo-h.png'; // Placeholder avatar
 function ProfileModal({ isOpen, onClose, onSignOut }) {
   if (!isOpen) return null;
 
+  // Get user data from localStorage
+  const userData = JSON.parse(localStorage.getItem('user') || '{}');
+
   return (
     <div className="profile-modal-overlay" onClick={onClose}>
       <div className="profile-modal-panel" onClick={(e) => e.stopPropagation()}>
@@ -17,9 +20,9 @@ function ProfileModal({ isOpen, onClose, onSignOut }) {
         <div className="profile-header">
           <img src={profileAvatar} alt="Profile" className="profile-avatar" />
           <div className="profile-info">
-            <h3>Full name</h3>
-            <p>Mail Address</p>
-            <p>Department</p>
+            <h3>{userData.fullname || 'Full name'}</h3>
+            <p>{userData.email || 'Mail Address'}</p>
+            <p>{userData.department || 'Department'}</p>
           </div>
         </div>
 

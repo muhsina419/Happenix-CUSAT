@@ -87,11 +87,15 @@ function CreateEventPage() {
       posterUrl = `https://${import.meta.env.VITE_S3_BUCKET}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${key}`;
     }
 
+    // Get user data from localStorage
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    
     const fd = new FormData();
     Object.entries({
       ...form,
       requireApproval: String(requireApproval),
       posterUrl,
+      organizerEmail: userData.email || '',
     }).forEach(([k, v]) => fd.append(k, v ?? ''));
 
     const res = await eventsAPI.create(fd);

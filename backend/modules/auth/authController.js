@@ -4,7 +4,7 @@ const {
   CognitoUserAttribute,
   userPool,
 } = require("../../config/cognito");
-const { createUser, updateUserVerified } = require("../users/userModels");
+const { createUser, updateUserVerified, getUserByEmail } = require("../users/userModels");
 
 // ===============================
 // REGISTER USER
@@ -98,11 +98,23 @@ const login = (req, res) => {
   const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
 
   cognitoUser.authenticateUser(authDetails, {
-    onSuccess: (result) => {
-      return res.json({
-        message: "Login successful",
-        token: result.getIdToken().getJwtToken(),
-      });
+    onSuccess: async (result) => {
+      try {
+        // Fetch user details from DynamoDB
+        const userDetails = await getUserByEmail(email);
+        return res.json({
+          message: "Login successful",
+          token: result.getIdToken().getJwtToken(),
+          user: userDetails,
+        });
+      } catch (err) {
+        console.error("❌ Error fetching user details:", err);
+        return res.json({
+          message: "Login successful",
+          token: result.getIdToken().getJwtToken(),
+          user: null,
+        });
+      }
     },
     onFailure: (err) => {
       // Provide clearer error information for the frontend to handle

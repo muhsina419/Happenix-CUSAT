@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom'; // 1. Import useOutletContext
 import EventCard from '../components/EventCard';
 import EventDetailModal from '../components/EventDetailModal';
 import UpcomingEventItem from '../components/UpcomingEventItem';
+import { eventsAPI } from '../api/events';
 import '../styles/Dashboard.css';
 
 // ... (your mock data imports)
@@ -35,6 +36,24 @@ function DashboardPage() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const scrollContainerRef = useRef(null);
   const [expandedEventId, setExpandedEventId] = useState(null);
+  const [userCreatedEvents, setUserCreatedEvents] = useState([]);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+
+  // Fetch user-created events on component mount
+  useEffect(() => {
+    const fetchUserEvents = async () => {
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      if (userData.email) {
+        const result = await eventsAPI.getUserEvents(userData.email);
+        if (result.success) {
+          setUserCreatedEvents(result.data);
+        }
+      }
+      setIsLoadingEvents(false);
+    };
+
+    fetchUserEvents();
+  }, []);
 
   const handleScroll = () => { /* ... (this function is unchanged) ... */ };
   const handleToggleEvent = (eventId) => { /* ... (this function is unchanged) ... */ };
@@ -46,22 +65,26 @@ function DashboardPage() {
     event.title.toLowerCase().includes(lowerSearchTerm)
   );
 
-  const filteredUpcoming = upcomingEventsData.filter(event => 
+  // Combine user-created events with upcoming events
+  const allUpcomingEvents = [
+    ...upcomingEventsData,
+    ...userCreatedEvents.map(event => ({
+      id: event.id,
+      title: event.name,
+      date: event.startDate,
+      description: event.description,
+      image: event.posterUrl || techImg, // Use poster URL or default image
+      isUserCreated: true
+    }))
+  ];
+
+  const filteredUpcoming = allUpcomingEvents.filter(event => 
     event.title.toLowerCase().includes(lowerSearchTerm)
   );
 
   return (
     <>
       <div className="dashboard-content">
-        <div className="create-event-section">
-        <button 
-    className="create-event-btn" 
-    onClick={() => navigate('/create-event')}
-  >
-    Create Your Own Event
-  </button>
-        </div>
-
         <section className="recommendations-section">
           <div className="section-header">
             <h2>Personalized Recommendations</h2>
@@ -84,10 +107,18 @@ function DashboardPage() {
         <section className="upcoming-events-section">
           <div className="section-header">
             <h2>Upcoming Events</h2>
+            <button 
+              className="create-event-btn" 
+              onClick={() => navigate('/create-event')}
+            >
+              Create Event
+            </button>
           </div>
           {/* 5. Use the filtered list to render the accordion */}
           <div className="upcoming-events-list">
-            {filteredUpcoming.length > 0 ? (
+            {isLoadingEvents ? (
+              <p className="loading-text">Loading events...</p>
+            ) : filteredUpcoming.length > 0 ? (
               filteredUpcoming.map(event => (
                 <UpcomingEventItem
                   key={event.id}

@@ -24,8 +24,11 @@ function LoginPage() {
         setIsLoading(false);
 
         if (result.success) {
-            // Save JWT token
+            // Save JWT token and user data
             localStorage.setItem('token', result.data.token);
+            if (result.data.user) {
+                localStorage.setItem('user', JSON.stringify(result.data.user));
+            }
             navigate('/dashboard'); 
         } else {
             // If user not confirmed, Cognito typically returns a message containing 'User is not confirmed'

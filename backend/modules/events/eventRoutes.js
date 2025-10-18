@@ -3,6 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const { createEvent, searchEvents, getPresignedUrl } = require("./eventService");
+const { getUserCreatedEvents } = require("../users/userModels");
 
 const router = express.Router();
 
@@ -56,6 +57,7 @@ async function handleCreate(req, res) {
       eventLink: eventLink && eventLink !== "none" ? eventLink : null,
       // Accept posterUrl from client instead of embedding binary
       posterUrl: req.body.posterUrl || null,
+      organizerEmail: req.body.organizerEmail || req.user?.email, // Add organizer email
       createdAt: new Date().toISOString(),
     };
 
@@ -100,6 +102,22 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error("Search events error:", err);
     return res.status(500).json({ error: "Failed to search events" });
+  }
+});
+
+// GET /api/events/user/:email - Get events created by a specific user
+router.get("/user/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    if (!email) {
+      return res.status(400).json({ error: "Email parameter is required" });
+    }
+    
+    const events = await getUserCreatedEvents(email);
+    return res.json({ events });
+  } catch (err) {
+    console.error("Get user events error:", err);
+    return res.status(500).json({ error: "Failed to fetch user events" });
   }
 });
 

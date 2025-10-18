@@ -36,6 +36,22 @@
     align-items: center;
     margin-bottom: 1.5rem;
   }
+
+  .section-header .create-event-btn {
+    background-color: #3C3A6E;
+    border: 1px solid #5A588A;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .section-header .create-event-btn:hover {
+    background-color: #4C4A7E;
+  }
   
   .section-header h2 {
     font-size: 1.5rem;
@@ -68,6 +84,101 @@
   
   .events-carousel::-webkit-scrollbar {
     display: none;
+  }
+
+  .my-events-section {
+    background-color: #2F2D5E;
+    padding: 2rem;
+    border-radius: 20px;
+    margin-top: 3rem;
+  }
+  
+  .my-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .my-event-item {
+    background-color: #3C3A6E;
+    padding: 1.5rem;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 1px solid #5A588A;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .my-event-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .event-info {
+    flex: 1;
+  }
+
+  .event-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #FFFFFF;
+  }
+
+  .event-date, .event-location {
+    margin: 0.25rem 0;
+    color: #A0AEC0;
+    font-size: 0.9rem;
+  }
+
+  .event-description {
+    margin: 0.5rem 0 0 0;
+    color: #E2E8F0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .event-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+  }
+
+  .edit-event-btn, .view-event-btn {
+    background-color: #5A588A;
+    border: 1px solid #7A78A0;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .edit-event-btn:hover, .view-event-btn:hover {
+    background-color: #6B6A9A;
+  }
+
+  .create-first-event-btn {
+    background-color: #3C3A6E;
+    border: 1px solid #5A588A;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: background-color 0.2s;
+  }
+
+  .create-first-event-btn:hover {
+    background-color: #4C4A7E;
+  }
+
+  .loading-text {
+    color: #A0AEC0;
+    padding-left: 1rem;
+    font-style: italic;
   }
 
   .upcoming-events-section {
