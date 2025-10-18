@@ -1,0 +1,37 @@
+service: happenix-backend
+
+frameworkVersion: '4' # Compatible with your Serverless v4 CLI
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-north-1
+  environment:
+    # Cognito
+    USER_POOL_ID: ${env:USER_POOL_ID}
+    CLIENT_ID: ${env:CLIENT_ID}
+
+    # DynamoDB tables
+    USERS_TABLE: ${env:DYNAMO_TABLE_USERS}
+    EVENTS_TABLE: ${env:DYNAMO_TABLE_EVENTS}
+
+    # S3 bucket
+    S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
+
+functions:
+  app:
+    handler: handler.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+      - http:
+          path: /
+          method: ANY
+
+plugins:
+  - serverless-dotenv-plugin
+
+custom:
+  dotenv:
+    path: .env.deploy

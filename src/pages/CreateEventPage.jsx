@@ -64,12 +64,36 @@ function CreateEventPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    let posterUrl = '';
+    if (posterFile) {
+      // 1) get presigned URL
+      const presign = await eventsAPI.presign(posterFile.type || 'image/jpeg');
+      if (!presign.success) {
+        alert(presign.error || 'Failed to prepare upload');
+        return;
+      }
+      const { url, key } = presign.data;
+      // 2) upload directly to S3
+      const uploadRes = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': posterFile.type || 'application/octet-stream' },
+        body: posterFile,
+      });
+      if (!uploadRes.ok) {
+        alert('Failed to upload poster');
+        return;
+      }
+      // Build public URL to the uploaded object
+      posterUrl = `https://${import.meta.env.VITE_S3_BUCKET}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${key}`;
+    }
+
     const fd = new FormData();
     Object.entries({
       ...form,
       requireApproval: String(requireApproval),
+      posterUrl,
     }).forEach(([k, v]) => fd.append(k, v ?? ''));
-    if (posterFile) fd.append('poster', posterFile);
+
     const res = await eventsAPI.create(fd);
     if (res.success) {
       alert('Event created');

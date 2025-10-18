@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
-const { createEvent, searchEvents } = require("./eventService");
+const { createEvent, searchEvents, getPresignedUrl } = require("./eventService");
 
 const router = express.Router();
 
@@ -54,7 +54,8 @@ async function handleCreate(req, res) {
       requireApproval: String(requireApproval).toLowerCase() === "true",
       capacity: capacity ? Number(capacity) : 0,
       eventLink: eventLink && eventLink !== "none" ? eventLink : null,
-      poster: posterFile, // storing as base64 for demo; replace with S3 in production
+      // Accept posterUrl from client instead of embedding binary
+      posterUrl: req.body.posterUrl || null,
       createdAt: new Date().toISOString(),
     };
 
@@ -71,6 +72,19 @@ router.post("/", upload.single("poster"), handleCreate);
 
 // POST /api/create-event  (multipart/form-data)
 router.post("/create-event", upload.single("poster"), handleCreate);
+
+// POST /api/events/presign  -> returns { url, key, contentType }
+router.post("/presign", async (req, res) => {
+  try {
+    const { contentType } = req.body;
+    if (!contentType) return res.status(400).json({ error: "contentType is required" });
+    const result = await getPresignedUrl(contentType);
+    return res.json(result);
+  } catch (err) {
+    console.error("Presign error:", err);
+    return res.status(500).json({ error: "Failed to presign upload" });
+  }
+});
 
 // GET /api/events/test - Simple test endpoint
 router.get("/test", (req, res) => {
